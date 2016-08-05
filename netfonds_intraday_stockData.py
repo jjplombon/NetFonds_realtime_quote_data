@@ -125,11 +125,11 @@ def trading_hours(data):
 # A = Amex # common for ETFs
 # ~~~~~~~~~~~~~~~~~~
 #ticker       = 'NKE'
-ticker       = 'MMM'
+ticker       = 'IWM'
 #ticker       = 'QQQ'
-exchange_sym = 'N'
+#exchange_sym = 'N'
 #ticker     = 'NOG'
-#exchange_sym = 'A'
+exchange_sym = 'A'
 str_status = 'Read {} real-time tick data from Netfonds.no; exchange {}'.format( ticker, exchange_sym)
 print str_status
 

@@ -20,6 +20,7 @@ sns.set_style('whitegrid')
 
 from pprint import pprint as pp
 import time
+import itertools
 # ================================================================== #
 # timer start #
 t0 = time.clock() 
@@ -40,7 +41,11 @@ day_2 = now - 2 * BDay()
 day_1 = now - 1 * BDay()
 
 days  = [ day_1.day, day_2.day, day_3.day, day_4.day, day_5.day ]
+months = [ day_1.month, day_2.month, day_3.month, day_4.month, day_5.month ]
+years = [ day_1.year, day_2.year, day_3.year, day_4.year, day_5.year ]
 days  = [ str(d) for d in days ]
+months  = [ str(ms) for ms in months ]
+years  = [ str(ys) for ys in years ]
 
 def netfonds_p( symbol ):
     url_posdump  = r'http://www.netfonds.no/quotes/posdump.php?date=%s%s%s&paper=%s.%s&csv_format=csv'
@@ -49,8 +54,15 @@ def netfonds_p( symbol ):
     cols_posdump = [ 'bid', 'bdepth', 'bdeptht', 'offer', 'odepth', 'odeptht' ]
 
     # ~~~~~~~~~~~~~~~~~~
-    for day in days:
+    #for day in days:
+    for (day, month, year) in itertools.izip(days, months, years):
         try:
+            #  Append '0' to day and month if single digit
+            if len(day) == 1:
+                day = '0' + day
+            if len(month) == 1:
+                month = '0' + month
+
             full_url = url_posdump % ( year, month, day, symbol, exchange_sym )
             #sym_posdump = sym_posdump.append( p.read_csv( url_posdump % ( year, month, day, symbol, exchange_sym ), index_col=0, header=0, parse_dates=True ) ) 
             sym_posdump = sym_posdump.append( p.read_csv( full_url, index_col=0, header=0, parse_dates=True ) )   
@@ -65,8 +77,15 @@ def netfonds_t( symbol ):
     sym_tdump = p.DataFrame()
 
     # ~~~~~~~~~~~~~~~~~~
-    for day in days:
+    #for day in days:
+    for (day, month, year) in itertools.izip(days, months, years):
         try:
+            #  Append '0' to day and month if single digit
+            if len(day) == 1:
+                day = '0' + day
+            if len(month) == 1:
+                month = '0' + month
+
             full_url = url_tdump % ( year, month, day, symbol, exchange_sym )
             
             #sym_tdump = sym_tdump.append( p.read_csv( url_tdump % ( year, month, day, symbol, exchange_sym ),
@@ -109,11 +128,16 @@ def trading_hours(data):
 ticker       = 'MMM'
 #ticker       = 'QQQ'
 exchange_sym = 'N'
+#ticker     = 'NOG'
 #exchange_sym = 'A'
+str_status = 'Read {} real-time tick data from Netfonds.no; exchange {}'.format( ticker, exchange_sym)
+print str_status
 
 # ~~~~~~~~~~~~~~~~~~
 # resample irregular tick data
-pos = resample( netfonds_p( ticker ) )
+raw_data = netfonds_p( ticker )
+#pos = resample( netfonds_p( ticker ) )
+pos = resample( raw_data )
 t   = resample( netfonds_t( ticker ).dropna(axis=1) )
 
 # ~~~~~~~~~~~~~~~~~~

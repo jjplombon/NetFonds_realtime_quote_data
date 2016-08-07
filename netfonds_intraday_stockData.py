@@ -39,10 +39,12 @@ day_4 = now - 4 * BDay()
 day_3 = now - 3 * BDay()
 day_2 = now - 2 * BDay()
 day_1 = now - 1 * BDay()
+# Add current day_0
+day_0 = now - 0 * BDay()
 
-days  = [ day_1.day, day_2.day, day_3.day, day_4.day, day_5.day ]
-months = [ day_1.month, day_2.month, day_3.month, day_4.month, day_5.month ]
-years = [ day_1.year, day_2.year, day_3.year, day_4.year, day_5.year ]
+days  = [ day_5.day, day_4.day, day_3.day, day_2.day, day_1.day, day_0.day ]
+months = [ day_5.month, day_4.month, day_3.month, day_2.month, day_1.month, day_0.month ]
+years = [ day_5.year, day_4.year, day_3.year, day_2.year, day_1.year, day_0.year ]
 days  = [ str(d) for d in days ]
 months  = [ str(ms) for ms in months ]
 years  = [ str(ys) for ys in years ]
@@ -145,8 +147,8 @@ t   = resample( netfonds_t( ticker ).dropna(axis=1) )
 pos_rth = trading_hours( pos )
 t_rth   = trading_hours( t )
 
-pos_trading_days = [ pos_rth[0],pos_rth[1],pos_rth[2],pos_rth[3],pos_rth[4] ]
-t_trading_days   = [ t_rth[0],t_rth[1],t_rth[2],t_rth[3],t_rth[4] ]
+pos_trading_days = [ pos_rth[0],pos_rth[1],pos_rth[2],pos_rth[3],pos_rth[4],pos_rth[5] ]
+t_trading_days   = [ t_rth[0],t_rth[1],t_rth[2],t_rth[3],t_rth[4],t_rth[5] ]
 
 pos_rth = p.concat( pos_trading_days,ignore_index=True )
 t_rth   = p.concat( t_trading_days, ignore_index=True )
@@ -154,12 +156,23 @@ t_rth   = p.concat( t_trading_days, ignore_index=True )
 # ================================================ #
 # sample plots
 
-pos_rth[['bid','bdeptht','offer','odeptht']].plot( color='blue', figsize=size, subplots=True )
+#  pos_rth and t_rth eliminates date/time and after hours data and plots 1min means...
+#pos_rth[['bid','bdeptht','offer','odeptht']].plot( color='blue', figsize=size, subplots=True )
+#plt.legend( loc='upper right' )
+#plt.suptitle('{} bid/offer data'.format(ticker), size=18 )
+#plt.show()
+
+#t_rth.plot( color='blue', figsize=size, subplots=True )
+#plt.legend( loc='upper right' )
+#plt.suptitle('{} price/volume data'.format(ticker), size=18 )
+#plt.show()
+
+pos[['bid','bdeptht','offer','odeptht']].plot( color='blue', figsize=size, subplots=True )
 plt.legend( loc='upper right' )
 plt.suptitle('{} bid/offer data'.format(ticker), size=18 )
 plt.show()
 
-t_rth.plot( color='blue', figsize=size, subplots=True )
+t.plot( color='blue', figsize=size, subplots=True )
 plt.legend( loc='upper right' )
 plt.suptitle('{} price/volume data'.format(ticker), size=18 )
 plt.show()
